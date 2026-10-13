@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#101827" />
+    <meta name="description" content="hysquib 的 NFC 数字名片 · QQ 3596521659" />
+    <title>hysquib · NFC 名片</title>
+    <style>
+      :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
+      * { box-sizing: border-box; }
+      body { min-height: 100svh; margin: 0; display: grid; place-items: center; padding: 24px; color: #f5f7fa; background: radial-gradient(circle at 15% 10%, #234165 0, transparent 32%), radial-gradient(circle at 88% 85%, #194a4c 0, transparent 30%), #101827; }
+      main { width: min(100%, 440px); padding: clamp(28px, 7vw, 42px); border: 1px solid #ffffff2b; border-radius: 28px; background: #ffffff0d; box-shadow: 0 24px 80px #0005; backdrop-filter: blur(18px); }
+      .eyebrow { margin: 0 0 34px; color: #8cdbcf; font-size: .75rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
+      .avatar { display: grid; place-items: center; width: 80px; height: 80px; border-radius: 24px; background: linear-gradient(135deg, #7ee3cf, #7aa9f7); color: #102239; font-size: 2rem; font-weight: 800; box-shadow: 0 12px 30px #0004; }
+      h1 { margin: 24px 0 8px; font-size: clamp(2.3rem, 9vw, 3.3rem); letter-spacing: -.055em; line-height: 1.1; }
+      .intro { margin: 0; color: #bfccd9; line-height: 1.7; }
+      .rule { height: 1px; margin: 34px 0; background: #ffffff24; }
+      .links { display: grid; gap: 12px; }
+      a, button { display: flex; align-items: center; justify-content: space-between; min-height: 54px; width: 100%; padding: 0 18px; border: 1px solid #ffffff2b; border-radius: 14px; color: inherit; background: #ffffff0c; font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; transition: background .2s, transform .2s; }
+      a:hover, button:hover { background: #ffffff1c; transform: translateY(-2px); }
+      a:focus-visible, button:focus-visible { outline: 2px solid #8cdbcf; outline-offset: 3px; }
+      .primary { border-color: #8cdbcf; color: #102239; background: #8cdbcf; }
+      .primary:hover { background: #b5eee4; }
+      .arrow { font-size: 1.3rem; font-weight: 400; }
+      footer { margin-top: 34px; color: #9caec0; font-size: .78rem; text-align: center; }
+      @media (prefers-reduced-motion: reduce) { a, button { transition: none; } }
+    </style>
+  </head>
+  <body>
+    <main>
+      <p class="eyebrow">NFC · Digital card</p>
+      <div class="avatar" aria-hidden="true">h</div>
+      <h1>hysquib</h1>
+      <p class="intro">你好，我是 hysquib。喜欢探索新想法，也乐于认识有趣的人。很高兴通过这张小卡片与你相遇。</p>
+      <div class="rule" aria-hidden="true"></div>
+      <nav class="links" aria-label="联系链接">
+        <button id="qq" class="primary" type="button">QQ：3596521659 · 点击复制 <span class="arrow" aria-hidden="true">⧉</span></button>
+        <a href="https://github.com/hysquib" target="_blank" rel="noopener noreferrer">访问 GitHub <span class="arrow" aria-hidden="true">↗</span></a>
+        <button id="share" type="button">分享这张名片 <span class="arrow" aria-hidden="true">↗</span></button>
+      </nav>
+      <footer>轻触卡片，保持联系。</footer>
+    </main>
+    <script>
+      const shareButton = document.querySelector('#share');
+      const qqButton = document.querySelector('#qq');
+      qqButton.addEventListener('click', async () => {
+        try {
+          await navigator.clipboard.writeText('3596521659');
+          qqButton.firstChild.textContent = 'QQ 号码已复制 ';
+          setTimeout(() => { qqButton.firstChild.textContent = 'QQ：3596521659 · 点击复制 '; }, 2500);
+        } catch {
+          window.prompt('复制 QQ 号码', '3596521659');
+        }
+      });
+      shareButton.addEventListener('click', async () => {
+        try {
+          if (navigator.share) {
+            await navigator.share({ title: 'hysquib · NFC 名片', url: location.href });
+          } else if (navigator.clipboard && window.isSecureContext) {
+            await navigator.clipboard.writeText(location.href);
+            shareButton.firstChild.textContent = '链接已复制 ';
+            setTimeout(() => { shareButton.firstChild.textContent = '分享这张名片 '; }, 2500);
+          } else {
+            window.prompt('复制名片链接', location.href);
+          }
+        } catch (error) {
+          if (error.name !== 'AbortError') window.prompt('复制名片链接', location.href);
+        }
+      });
+    </script>
+  </body>
+</html>
