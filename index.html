@@ -1,74 +1,109 @@
 <!doctype html>
 <html lang="zh-CN">
-  <head>
-    <meta charset="utf-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <meta name="theme-color" content="#101827" />
-    <meta name="description" content="hysquib 的 NFC 数字名片 · QQ 3596521659" />
-    <title>hysquib · NFC 名片</title>
-    <style>
-      :root { color-scheme: dark; font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif; }
-      * { box-sizing: border-box; }
-      body { min-height: 100svh; margin: 0; display: grid; place-items: center; padding: 24px; color: #f5f7fa; background: radial-gradient(circle at 15% 10%, #234165 0, transparent 32%), radial-gradient(circle at 88% 85%, #194a4c 0, transparent 30%), #101827; }
-      main { width: min(100%, 440px); padding: clamp(28px, 7vw, 42px); border: 1px solid #ffffff2b; border-radius: 28px; background: #ffffff0d; box-shadow: 0 24px 80px #0005; backdrop-filter: blur(18px); }
-      .eyebrow { margin: 0 0 34px; color: #8cdbcf; font-size: .75rem; font-weight: 700; letter-spacing: .2em; text-transform: uppercase; }
-      .avatar { display: grid; place-items: center; width: 80px; height: 80px; border-radius: 24px; background: linear-gradient(135deg, #7ee3cf, #7aa9f7); color: #102239; font-size: 2rem; font-weight: 800; box-shadow: 0 12px 30px #0004; }
-      h1 { margin: 24px 0 8px; font-size: clamp(2.3rem, 9vw, 3.3rem); letter-spacing: -.055em; line-height: 1.1; }
-      .intro { margin: 0; color: #bfccd9; line-height: 1.7; }
-      .rule { height: 1px; margin: 34px 0; background: #ffffff24; }
-      .links { display: grid; gap: 12px; }
-      a, button { display: flex; align-items: center; justify-content: space-between; min-height: 54px; width: 100%; padding: 0 18px; border: 1px solid #ffffff2b; border-radius: 14px; color: inherit; background: #ffffff0c; font: inherit; font-weight: 600; text-decoration: none; cursor: pointer; transition: background .2s, transform .2s; }
-      a:hover, button:hover { background: #ffffff1c; transform: translateY(-2px); }
-      a:focus-visible, button:focus-visible { outline: 2px solid #8cdbcf; outline-offset: 3px; }
-      .primary { border-color: #8cdbcf; color: #102239; background: #8cdbcf; }
-      .primary:hover { background: #b5eee4; }
-      .arrow { font-size: 1.3rem; font-weight: 400; }
-      footer { margin-top: 34px; color: #9caec0; font-size: .78rem; text-align: center; }
-      @media (prefers-reduced-motion: reduce) { a, button { transition: none; } }
-    </style>
-  </head>
-  <body>
-    <main>
-      <p class="eyebrow">NFC · Digital card</p>
-      <div class="avatar" aria-hidden="true">h</div>
-      <h1>hysquib</h1>
-      <p class="intro">你好，我是 hysquib。喜欢探索新想法，也乐于认识有趣的人。很高兴通过这张小卡片与你相遇。</p>
-      <div class="rule" aria-hidden="true"></div>
-      <nav class="links" aria-label="联系链接">
-        <button id="qq" class="primary" type="button">QQ：3596521659 · 点击复制 <span class="arrow" aria-hidden="true">⧉</span></button>
-        <a href="https://github.com/hysquib">访问 GitHub <span class="arrow" aria-hidden="true">↗</span></a>
-        <a href="https://blog.hysquib.cn/">Blog <span class="arrow" aria-hidden="true">↗</span></a>
-        <button id="share" type="button">分享这张名片 <span class="arrow" aria-hidden="true">↗</span></button>
-      </nav>
-      <footer>轻触卡片，保持联系。</footer>
-    </main>
-    <script>
-      const shareButton = document.querySelector('#share');
-      const qqButton = document.querySelector('#qq');
-      qqButton.addEventListener('click', async () => {
-        try {
-          await navigator.clipboard.writeText('3596521659');
-          qqButton.firstChild.textContent = 'QQ 号码已复制 ';
-          setTimeout(() => { qqButton.firstChild.textContent = 'QQ：3596521659 · 点击复制 '; }, 2500);
-        } catch {
-          window.prompt('复制 QQ 号码', '3596521659');
-        }
-      });
-      shareButton.addEventListener('click', async () => {
-        try {
-          if (navigator.share) {
-            await navigator.share({ title: 'hysquib · NFC 名片', url: location.href });
-          } else if (navigator.clipboard && window.isSecureContext) {
-            await navigator.clipboard.writeText(location.href);
-            shareButton.firstChild.textContent = '链接已复制 ';
-            setTimeout(() => { shareButton.firstChild.textContent = '分享这张名片 '; }, 2500);
-          } else {
-            window.prompt('复制名片链接', location.href);
-          }
-        } catch (error) {
-          if (error.name !== 'AbortError') window.prompt('复制名片链接', location.href);
-        }
-      });
-    </script>
-  </body>
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#f4efe6">
+  <meta name="description" content="hysquib 的 NFC 数字名片。轻轻一碰，认识一下。">
+  <title>hysquib · NFC 名片</title>
+  <style>
+    :root{font-family:"Arial","PingFang SC","Microsoft YaHei",sans-serif;color:#25251f;background:#f4efe6}
+    *{box-sizing:border-box}
+    html{scroll-behavior:smooth}
+    body{margin:0;min-height:100svh;background:repeating-linear-gradient(0deg,transparent 0 3px,#24241b06 3px 4px),#f4efe6}
+    button,a{font:inherit}
+    button{cursor:pointer}
+    .page{width:min(100%,900px);margin:auto;padding:24px clamp(18px,5vw,54px) 44px}
+    .masthead{display:flex;justify-content:space-between;align-items:center;padding:0 0 17px;border-bottom:2px solid #25251f;font-size:12px;font-weight:800;letter-spacing:.13em}
+    .masthead span:last-child{font-weight:500;letter-spacing:.04em}
+    .hero{position:relative;display:grid;grid-template-columns:1fr 190px;gap:20px;padding:58px 0 43px;border-bottom:2px solid #25251f}
+    .kicker{display:flex;align-items:center;gap:10px;margin:0 0 20px;color:#a43d24;font-size:12px;font-weight:800;letter-spacing:.16em}
+    .kicker:before{content:"";width:22px;height:3px;background:#a43d24}
+    h1{margin:0;font-size:clamp(70px,15vw,150px);font-weight:900;letter-spacing:-.105em;line-height:.85}
+    h1 span{color:#d84d2a}
+    .subtitle{margin:26px 0 0;font-size:clamp(20px,3.5vw,29px);font-weight:700;letter-spacing:-.04em}
+    .stamp{position:relative;align-self:center;width:175px;height:175px;border:2px solid #d84d2a;border-radius:50%;color:#d84d2a;transform:rotate(12deg)}
+    .stamp:before,.stamp:after{content:"";position:absolute;inset:12px;border:1px solid #d84d2a;border-radius:50%}
+    .stamp:after{inset:28px}
+    .stamp-inner{position:absolute;inset:0;display:grid;place-items:center;z-index:1;text-align:center;font-size:55px;font-weight:900;line-height:1}
+    .stamp-inner small{display:block;font-size:10px;font-weight:800;letter-spacing:.18em;margin-top:5px}
+    .content{display:grid;grid-template-columns:1fr 1fr;gap:50px;padding:42px 0 38px}
+    .section-label{margin:0 0 22px;color:#a43d24;font-size:12px;font-weight:800;letter-spacing:.18em}
+    .intro{margin:0;max-width:26ch;font-size:clamp(21px,3vw,29px);font-weight:650;line-height:1.55;letter-spacing:-.035em}
+    .footnote{margin:28px 0 0;font-family:Georgia,serif;font-size:14px;font-style:italic;color:#6d6b62}
+    .links{display:grid;border-top:1px solid #25251f}
+    .item{display:flex;align-items:center;justify-content:space-between;gap:12px;width:100%;min-height:63px;padding:13px 0;border:0;border-bottom:1px solid #25251f;background:transparent;color:#25251f;text-align:left;text-decoration:none;transition:color .15s,padding .15s}
+    .item:hover{color:#c64422;padding-left:8px}
+    .item:focus-visible{outline:3px solid #d84d2a;outline-offset:3px}
+    .item strong{font-size:18px;font-weight:750}.item small{display:block;margin-top:3px;color:#69665c;font-size:12px}
+    .arrow{font-size:25px;font-weight:400;line-height:1}
+    .item.featured{color:#a43d24}
+    .footer{display:flex;justify-content:space-between;gap:15px;padding-top:18px;border-top:2px solid #25251f;color:#69665c;font-size:11px;letter-spacing:.08em}
+    @media(max-width:680px){
+      .hero{grid-template-columns:1fr;padding:50px 0 34px}
+      .stamp{position:absolute;right:5px;top:23px;width:74px;height:74px;border-width:1px}
+      .stamp:before{inset:6px}.stamp:after{inset:13px}.stamp-inner{font-size:26px}.stamp-inner small{font-size:5px;margin-top:1px}
+      h1{font-size:clamp(61px,15vw,100px)}
+      .content{grid-template-columns:1fr;gap:42px;padding:35px 0}
+      .intro{max-width:34ch}.footnote{margin-top:17px}
+    }
+    @media(max-width:370px){h1{font-size:59px}.stamp{opacity:.5}}
+    @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}.item{transition:none}}
+  </style>
+</head>
+<body>
+  <main class="page">
+    <header class="masthead"><span>HYSQUIB®</span><span>HELLO FROM AN NFC CARD ↗</span></header>
+    <section class="hero" aria-labelledby="name">
+      <div>
+        <p class="kicker">轻轻一碰，认识一下</p>
+        <h1 id="name">hy<span>s</span>quib.</h1>
+        <p class="subtitle">一个喜欢探索新想法的人。</p>
+      </div>
+      <div class="stamp" aria-hidden="true"><div class="stamp-inner">H<small>LET'S CONNECT</small></div></div>
+    </section>
+    <div class="content">
+      <section aria-labelledby="about-label">
+        <h2 class="section-label" id="about-label">01 / 关于我</h2>
+        <p class="intro">你好，我是 hysquib。很高兴通过这张小卡片与你相遇。喜欢有趣的人，也喜欢有意思的对话。</p>
+        <p class="footnote">A small card, a new connection.</p>
+      </section>
+      <section aria-labelledby="links-label">
+        <h2 class="section-label" id="links-label">02 / 找到我</h2>
+        <nav class="links" aria-label="联系链接">
+          <button class="item featured" id="qq" type="button"><span><strong>QQ · 3596521659</strong><small>点击复制号码</small></span><span class="arrow" aria-hidden="true">↗</span></button>
+          <a class="item" href="https://blog.hysquib.cn/"><span><strong>Blog</strong><small>看看我的文章</small></span><span class="arrow" aria-hidden="true">↗</span></a>
+          <a class="item" href="https://github.com/hysquib"><span><strong>GitHub</strong><small>看看我的项目</small></span><span class="arrow" aria-hidden="true">↗</span></a>
+          <button class="item" id="share" type="button"><span><strong>分享这张名片</strong><small>把这次相遇传给朋友</small></span><span class="arrow" aria-hidden="true">↗</span></button>
+        </nav>
+      </section>
+    </div>
+    <footer class="footer"><span>© HYSQUIB</span><span>很高兴与你相遇 ✳</span></footer>
+  </main>
+  <script>
+    const qqButton=document.querySelector('#qq');
+    const shareButton=document.querySelector('#share');
+    const qqHint=qqButton.querySelector('small');
+    const shareHint=shareButton.querySelector('small');
+    function flash(element,message,original){
+      element.textContent=message;
+      setTimeout(()=>{element.textContent=original},2500);
+    }
+    qqButton.addEventListener('click',async()=>{
+      try{
+        await navigator.clipboard.writeText('3596521659');
+        flash(qqHint,'已复制到剪贴板','点击复制号码');
+      }catch{window.prompt('复制 QQ 号码','3596521659')}
+    });
+    shareButton.addEventListener('click',async()=>{
+      try{
+        if(navigator.share) await navigator.share({title:'hysquib · NFC 名片',url:location.href});
+        else if(navigator.clipboard&&window.isSecureContext){
+          await navigator.clipboard.writeText(location.href);
+          flash(shareHint,'链接已复制','把这次相遇传给朋友');
+        }else window.prompt('复制名片链接',location.href);
+      }catch(error){if(error.name!=='AbortError') window.prompt('复制名片链接',location.href)}
+    });
+  </script>
+</body>
 </html>
